@@ -1,0 +1,410 @@
+/* =========================================
+   AUTH PAGE
+========================================= */
+
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(124, 58, 237, 0.25),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(236, 72, 153, 0.25),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #fdf2f8,
+      #eff6ff
+    );
+
+  position: relative;
+  overflow: hidden;
+  padding: 30px;
+}
+
+/* =========================================
+   BACKGROUND CIRCLES
+========================================= */
+
+.auth-background-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0.5;
+}
+
+.circle-one {
+  width: 300px;
+  height: 300px;
+  background: #c4b5fd;
+  top: -100px;
+  left: -100px;
+}
+
+.circle-two {
+  width: 350px;
+  height: 350px;
+  background: #f9a8d4;
+  bottom: -150px;
+  right: -100px;
+}
+
+/* =========================================
+   AUTH CARD
+========================================= */
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  padding: 45px;
+
+  border-radius: 28px;
+
+  box-shadow:
+    0 25px 70px rgba(79, 70, 229, 0.18),
+    0 10px 30px rgba(0, 0, 0, 0.08);
+
+  text-align: center;
+
+  position: relative;
+  z-index: 2;
+
+  backdrop-filter: blur(15px);
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* =========================================
+   LOGO
+========================================= */
+
+.auth-logo {
+  width: 75px;
+  height: 75px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 22px;
+
+  font-size: 38px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6,
+      #ec4899
+    );
+
+  box-shadow:
+    0 12px 25px rgba(99, 102, 241, 0.35);
+}
+
+/* =========================================
+   HEADINGS
+========================================= */
+
+.auth-card h1 {
+  margin: 5px 0;
+
+  font-size: 38px;
+
+  font-weight: 800;
+
+  background:
+    linear-gradient(
+      90deg,
+      #4f46e5,
+      #7c3aed,
+      #db2777
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-subtitle {
+  margin: 8px 0 5px;
+
+  font-size: 22px;
+
+  font-weight: 700;
+
+  color: #1f2937;
+}
+
+.auth-description {
+  margin-bottom: 30px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.input-group {
+  text-align: left;
+
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  color: #374151;
+}
+
+.input-group input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 14px 16px;
+
+  border: 2px solid #e5e7eb;
+
+  border-radius: 13px;
+
+  font-size: 15px;
+
+  outline: none;
+
+  background: #f9fafb;
+
+  transition: all 0.25s ease;
+}
+
+.input-group input:focus {
+  border-color: #6366f1;
+
+  background: white;
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.input-group input::placeholder {
+  color: #9ca3af;
+}
+
+/* =========================================
+   MAIN BUTTON
+========================================= */
+
+.auth-button {
+  width: 100%;
+
+  border: none;
+
+  padding: 15px;
+
+  border-radius: 14px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: white;
+
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5,
+      #7c3aed,
+      #db2777
+    );
+
+  box-shadow:
+    0 10px 25px rgba(99, 102, 241, 0.3);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 30px rgba(99, 102, 241, 0.4);
+}
+
+.auth-button:active {
+  transform: translateY(0);
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.auth-divider {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 25px 0;
+
+  color: #9ca3af;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+
+  flex: 1;
+
+  height: 1px;
+
+  background: #e5e7eb;
+}
+
+/* =========================================
+   SECONDARY BUTTON
+========================================= */
+
+.secondary-auth-button {
+  width: 100%;
+
+  padding: 13px;
+
+  border-radius: 13px;
+
+  border: 2px solid #6366f1;
+
+  background: white;
+
+  color: #4f46e5;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.secondary-auth-button:hover {
+  background: #eef2ff;
+
+  transform: translateY(-1px);
+}
+
+.switch-auth {
+  margin: 0 0 12px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   ERROR
+========================================= */
+
+.auth-error {
+  background: #fef2f2;
+
+  color: #dc2626;
+
+  border: 1px solid #fecaca;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+/* =========================================
+   SUCCESS
+========================================= */
+
+.auth-success {
+  background: #ecfdf5;
+
+  color: #059669;
+
+  border: 1px solid #a7f3d0;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .auth-page {
+    padding: 20px;
+  }
+
+  .auth-card {
+    padding: 30px 22px;
+
+    border-radius: 22px;
+  }
+
+  .auth-card h1 {
+    font-size: 32px;
+  }
+
+  .auth-subtitle {
+    font-size: 19px;
+  }
+}

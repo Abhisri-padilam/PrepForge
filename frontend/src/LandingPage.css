@@ -1,0 +1,694 @@
+/* =========================================================
+   PREPFORGE LANDING PAGE
+   ========================================================= */
+
+.landing-page {
+  min-height: 100vh;
+  width: 100%;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(168, 85, 247, 0.18),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(236, 72, 153, 0.15),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(99, 102, 241, 0.18),
+      transparent 35%
+    ),
+
+    linear-gradient(
+      135deg,
+      #faf7ff 0%,
+      #f4f0ff 45%,
+      #fff5fb 100%
+    );
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: #24213d;
+}
+
+
+/* =========================================================
+   BACKGROUND ORBS
+   ========================================================= */
+
+.landing-orb {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  animation:
+    floatingOrb
+    6s ease-in-out infinite;
+}
+
+
+.orb-one {
+  width: 300px;
+  height: 300px;
+
+  top: -120px;
+  left: -80px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(139, 92, 246, 0.25),
+      transparent 70%
+    );
+}
+
+
+.orb-two {
+  width: 380px;
+  height: 380px;
+
+  right: -140px;
+  top: 60px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(236, 72, 153, 0.20),
+      transparent 70%
+    );
+
+  animation-delay: 1.5s;
+}
+
+
+.orb-three {
+  width: 320px;
+  height: 320px;
+
+  bottom: -150px;
+  left: 35%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(99, 102, 241, 0.18),
+      transparent 70%
+    );
+
+  animation-delay: 3s;
+}
+
+
+@keyframes floatingOrb {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-18px);
+  }
+
+}
+
+
+/* =========================================================
+   SPARKLES
+   ========================================================= */
+
+.landing-spark {
+  position: absolute;
+
+  font-size: 28px;
+
+  color: #8b5cf6;
+
+  opacity: 0.55;
+
+  pointer-events: none;
+
+  animation:
+    sparkle
+    2.5s ease-in-out infinite;
+}
+
+
+.spark-one {
+  top: 22%;
+  left: 17%;
+}
+
+
+.spark-two {
+  top: 28%;
+  right: 18%;
+
+  color: #ec4899;
+
+  animation-delay: 0.5s;
+}
+
+
+.spark-three {
+  bottom: 25%;
+  left: 20%;
+
+  color: #6366f1;
+
+  animation-delay: 1s;
+}
+
+
+.spark-four {
+  bottom: 18%;
+  right: 22%;
+
+  color: #f59e0b;
+
+  animation-delay: 1.5s;
+}
+
+
+@keyframes sparkle {
+
+  0%,
+  100% {
+    transform:
+      scale(1)
+      rotate(0deg);
+
+    opacity: 0.35;
+  }
+
+  50% {
+    transform:
+      scale(1.35)
+      rotate(15deg);
+
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.landing-content {
+  position: relative;
+
+  z-index: 5;
+
+  width:
+    min(760px, 90%);
+
+  padding:
+    55px 40px;
+
+  text-align: center;
+
+  border-radius: 35px;
+
+  background:
+    rgba(255, 255, 255, 0.76);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+
+    0 30px 80px
+    rgba(88, 63, 150, 0.16),
+
+    0 10px 30px
+    rgba(88, 63, 150, 0.08);
+
+  backdrop-filter:
+    blur(20px);
+
+  animation:
+    landingAppear
+    0.8s ease forwards;
+}
+
+
+@keyframes landingAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   WELCOME BADGE
+   ========================================================= */
+
+.landing-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    9px 18px;
+
+  border-radius: 50px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.10),
+      rgba(236, 72, 153, 0.10)
+    );
+
+  border:
+    1px solid
+    rgba(124, 58, 237, 0.12);
+
+  color: #7c3aed;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   PREPFORGE
+   ========================================================= */
+
+.landing-title {
+
+  margin: 0;
+
+  font-size:
+    clamp(58px, 9vw, 100px);
+
+  line-height: 1;
+
+  font-weight: 900;
+
+  letter-spacing: -4px;
+
+  color: #25213d;
+
+  text-shadow:
+    0 8px 25px
+    rgba(76, 29, 149, 0.12);
+}
+
+
+.landing-title span {
+
+  background:
+    linear-gradient(
+      90deg,
+      #6d28d9,
+      #9333ea,
+      #ec4899
+    );
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.landing-subtitle {
+
+  margin:
+    18px 0 0;
+
+  font-size: 20px;
+
+  color: #777394;
+
+  font-weight: 500;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.landing-divider {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 14px;
+
+  width:
+    min(360px, 70%);
+
+  margin:
+    30px auto;
+}
+
+
+.landing-divider span {
+
+  height: 1px;
+
+  flex: 1;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(124, 58, 237, 0.3)
+    );
+}
+
+
+.landing-divider span:last-child {
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(236, 72, 153, 0.3),
+      transparent
+    );
+}
+
+
+.landing-divider div {
+
+  color: #a855f7;
+
+  font-size: 20px;
+}
+
+
+/* =========================================================
+   QUOTE
+   ========================================================= */
+
+.landing-quote {
+
+  margin: 0;
+
+  font-size:
+    clamp(30px, 5vw, 52px);
+
+  line-height: 1.18;
+
+  font-weight: 800;
+
+  letter-spacing: -1.5px;
+
+  color: #302b4d;
+}
+
+
+.landing-quote span {
+
+  background:
+    linear-gradient(
+      90deg,
+      #7c3aed,
+      #ec4899
+    );
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.landing-description {
+
+  margin:
+    22px 0 0;
+
+  font-size: 16px;
+
+  line-height: 1.7;
+
+  color: #817d99;
+}
+
+
+/* =========================================================
+   GET STARTED BUTTON
+   ========================================================= */
+
+.landing-start-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 30px;
+
+  padding:
+    15px 34px;
+
+  border: none;
+
+  border-radius: 50px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #7c3aed,
+      #a855f7,
+      #ec4899
+    );
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.2px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 30px
+    rgba(124, 58, 237, 0.28);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.landing-start-btn:hover {
+
+  transform:
+    translateY(-4px);
+
+  box-shadow:
+    0 18px 35px
+    rgba(124, 58, 237, 0.35);
+}
+
+
+.landing-start-btn:active {
+
+  transform:
+    translateY(-1px);
+}
+
+
+.start-arrow {
+
+  font-size: 20px;
+
+  transition:
+    transform 0.25s ease;
+}
+
+
+.landing-start-btn:hover
+.start-arrow {
+
+  transform:
+    translateX(5px);
+}
+
+
+/* =========================================================
+   HINT
+   ========================================================= */
+
+.landing-hint {
+
+  margin-top: 12px;
+
+  color: #aaa5bb;
+
+  font-size: 12px;
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.landing-footer {
+
+  position: absolute;
+
+  bottom: 25px;
+
+  left: 0;
+  right: 0;
+
+  z-index: 5;
+
+  text-align: center;
+
+  color: #8f8aa5;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+}
+
+
+.landing-footer span {
+
+  margin:
+    0 7px;
+
+  color: #c2bdd1;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .landing-content {
+
+    width: 88%;
+
+    padding:
+      45px 22px;
+
+    border-radius: 28px;
+  }
+
+
+  .landing-title {
+
+    font-size: 58px;
+
+    letter-spacing: -3px;
+  }
+
+
+  .landing-subtitle {
+
+    font-size: 16px;
+  }
+
+
+  .landing-quote {
+
+    font-size: 30px;
+  }
+
+
+  .landing-description {
+
+    font-size: 14px;
+  }
+
+
+  .landing-start-btn {
+
+    padding:
+      13px 28px;
+
+    font-size: 15px;
+  }
+
+
+  .landing-spark {
+
+    font-size: 20px;
+  }
+
+
+  .landing-footer {
+
+    font-size: 11px;
+
+    bottom: 15px;
+  }
+
+}

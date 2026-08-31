@@ -1,0 +1,396 @@
+/* ========================================
+   HISTORY PAGE
+======================================== */
+
+.history-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+
+  background: linear-gradient(
+    135deg,
+    #f3f1ff,
+    #fff0f8
+  );
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.history-header {
+  width: 100%;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.history-icon {
+  font-size: 52px;
+  line-height: 1;
+}
+
+.history-header h1 {
+  margin: 0;
+  font-size: 42px;
+  line-height: 1.2;
+
+  color: #20243f;
+  font-weight: 700;
+}
+
+.history-header p {
+  margin: 8px 0 0;
+
+  font-size: 18px;
+  color: #777;
+}
+
+
+/* ========================================
+   HISTORY LIST
+======================================== */
+
+.history-list {
+  width: 100%;
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 22px;
+}
+
+
+/* ========================================
+   HISTORY CARD
+======================================== */
+
+.history-card {
+  width: 100% !important;
+  max-width: 900px;
+
+  box-sizing: border-box;
+
+  background: #ffffff !important;
+
+  border-radius: 20px;
+
+  padding: 25px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.10);
+
+  border: 1px solid #eeeeee;
+}
+
+
+/* ========================================
+   CARD TOP
+======================================== */
+
+.history-card-top {
+  width: 100%;
+
+  display: flex !important;
+  flex-direction: row !important;
+
+  justify-content: space-between !important;
+  align-items: center !important;
+
+  margin-bottom: 15px;
+}
+
+.attempt-number {
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #6d28d9;
+}
+
+.history-category {
+  display: inline-block;
+
+  background: #ede9fe;
+  color: #6d28d9;
+
+  padding: 7px 16px;
+
+  border-radius: 20px;
+
+  font-weight: 600;
+}
+
+
+/* ========================================
+   DATE
+======================================== */
+
+.history-date {
+  color: #6b7280;
+
+  font-size: 14px;
+
+  margin-bottom: 10px;
+}
+
+.history-user {
+  color: #374151;
+
+  font-weight: 600;
+
+  margin-bottom: 20px;
+}
+
+
+/* ========================================
+   RESULT AREA
+======================================== */
+
+.history-result {
+  width: 100% !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr)) !important;
+
+  gap: 15px !important;
+
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   RESULT BOXES
+======================================== */
+
+.history-result > .score-box,
+.history-result > .percentage-box,
+.history-result > .wrong-box {
+  width: 100% !important;
+  min-width: 0 !important;
+
+  min-height: 100px;
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  text-align: center;
+
+  display: flex !important;
+
+  flex-direction: column !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   SCORE BOX
+======================================== */
+
+.history-result > .score-box {
+  background: #ecfdf5 !important;
+}
+
+
+/* ========================================
+   PERCENTAGE BOX
+======================================== */
+
+.history-result > .percentage-box {
+  background: #eef2ff !important;
+}
+
+
+/* ========================================
+   WRONG BOX
+======================================== */
+
+.history-result > .wrong-box {
+  background: #fef2f2 !important;
+}
+
+
+/* ========================================
+   SCORE NUMBER
+======================================== */
+
+.score-number {
+  display: flex !important;
+
+  flex-direction: row !important;
+
+  align-items: baseline !important;
+
+  justify-content: center !important;
+
+  white-space: nowrap !important;
+
+  width: auto !important;
+}
+
+
+/* CORRECT NUMBER */
+
+.score-box strong {
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #059669;
+}
+
+
+/* / TOTAL */
+
+.score-total {
+  display: inline !important;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  color: #374151;
+
+  margin-left: 3px;
+
+  white-space: nowrap;
+}
+
+
+/* ========================================
+   PERCENTAGE
+======================================== */
+
+.percentage-box strong {
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #4f46e5;
+
+  white-space: nowrap;
+}
+
+
+/* ========================================
+   INCORRECT
+======================================== */
+
+.wrong-box strong {
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #dc2626;
+
+  white-space: nowrap;
+}
+
+
+/* ========================================
+   LABELS
+======================================== */
+
+.score-box small,
+.percentage-box small,
+.wrong-box small {
+  display: block !important;
+
+  margin-top: 5px;
+
+  font-size: 13px;
+
+  color: #6b7280;
+}
+
+
+/* ========================================
+   EMPTY HISTORY
+======================================== */
+
+.empty-history {
+  width: 100%;
+  max-width: 600px;
+
+  margin: 60px auto;
+
+  padding: 50px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.empty-history > div {
+  font-size: 55px;
+}
+
+.empty-history h2 {
+  color: #374151;
+}
+
+.empty-history p {
+  color: #6b7280;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 700px) {
+
+  .history-page {
+    padding: 20px;
+  }
+
+  .history-header {
+    flex-direction: column !important;
+
+    text-align: center;
+  }
+
+  .history-header h1 {
+    font-size: 32px;
+  }
+
+  .history-list {
+    width: 100%;
+  }
+
+  .history-result {
+    grid-template-columns: 1fr !important;
+  }
+
+  .history-card-top {
+    flex-direction: column !important;
+
+    gap: 10px;
+  }
+
+  .history-card {
+    padding: 20px;
+  }
+}
