@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Auth.css";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://prepforge-70ga.onrender.com";
 
 function Login({ onLogin, onRegister }) {
   const [email, setEmail] = useState("");

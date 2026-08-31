@@ -4,7 +4,7 @@ import Login from "./Login";
 import Register from "./Register";
 import LandingPage from "./LandingPage";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://prepforge-70ga.onrender.com";
 
 function App() {
   // =========================================================

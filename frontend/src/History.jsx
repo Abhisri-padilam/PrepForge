@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./History.css";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://prepforge-70ga.onrender.com";
 
 function History() {
   const [history, setHistory] = useState([]);
@@ -56,10 +56,6 @@ function History() {
     }
   };
 
-  // ================================
-  // LOADING
-  // ================================
-
   if (loading) {
     return (
       <div className="history-page">
@@ -80,10 +76,6 @@ function History() {
       </div>
     );
   }
-
-  // ================================
-  // ERROR
-  // ================================
 
   if (error) {
     return (
@@ -113,14 +105,9 @@ function History() {
     );
   }
 
-  // ================================
-  // MAIN PAGE
-  // ================================
-
   return (
     <div className="history-page">
 
-      {/* HEADER */}
       <div className="history-header">
 
         <div className="history-icon">
@@ -134,7 +121,6 @@ function History() {
 
       </div>
 
-      {/* NO HISTORY */}
       {history.length === 0 ? (
 
         <div className="empty-history">
@@ -164,14 +150,6 @@ function History() {
             const incorrect =
               Number(item.incorrect_answers) || 0;
 
-            /*
-              IMPORTANT:
-              Use the score calculated by the backend.
-
-              Your FastAPI backend already calculates:
-              score = correct_answers / total_questions * 100
-            */
-
             const score =
               item.score !== undefined &&
               item.score !== null
@@ -187,10 +165,6 @@ function History() {
                 key={item.id || index}
               >
 
-                {/* =========================
-                    TOP
-                ========================= */}
-
                 <div className="history-card-top">
 
                   <span className="attempt-number">
@@ -202,11 +176,6 @@ function History() {
                   </span>
 
                 </div>
-
-
-                {/* =========================
-                    DATE
-                ========================= */}
 
                 <div className="history-date">
 
@@ -220,25 +189,13 @@ function History() {
 
                 </div>
 
-
-                {/* =========================
-                    USER
-                ========================= */}
-
                 <div className="history-user">
 
                   👤 Quiz Attempt
 
                 </div>
 
-
-                {/* =========================
-                    RESULT
-                ========================= */}
-
                 <div className="history-result">
-
-                  {/* CORRECT */}
 
                   <div className="score-box">
 
@@ -260,9 +217,6 @@ function History() {
 
                   </div>
 
-
-                  {/* SCORE */}
-
                   <div className="percentage-box">
 
                     <strong>
@@ -274,9 +228,6 @@ function History() {
                     </small>
 
                   </div>
-
-
-                  {/* INCORRECT */}
 
                   <div className="wrong-box">
 
