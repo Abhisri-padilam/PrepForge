@@ -12,6 +12,7 @@ from app.schemas import (
     QuizHistoryCreate,
     QuizHistoryResponse
 )
+
 from app.security import (
     hash_password,
     verify_password,
@@ -20,6 +21,10 @@ from app.security import (
 )
 
 
+# ==================================================
+# APP
+# ==================================================
+
 app = FastAPI(
     title="PrepForge API",
     description="Prepare. Practice. Get Hired.",
@@ -27,15 +32,16 @@ app = FastAPI(
 )
 
 
-# --------------------------------------------------
+# ==================================================
 # CORS
-# --------------------------------------------------
+# ==================================================
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "http://localhost:5174"
+        "http://localhost:5174",
+        "https://prepforge-frontend-wkmw.onrender.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -43,9 +49,9 @@ app.add_middleware(
 )
 
 
-# --------------------------------------------------
+# ==================================================
 # DATABASE TABLES
-# --------------------------------------------------
+# ==================================================
 
 try:
     Base.metadata.create_all(bind=engine)
@@ -53,9 +59,9 @@ except Exception as e:
     print("Database table check:", e)
 
 
-# --------------------------------------------------
+# ==================================================
 # DATABASE SESSION
-# --------------------------------------------------
+# ==================================================
 
 def get_db():
     db = SessionLocal()
@@ -66,9 +72,9 @@ def get_db():
         db.close()
 
 
-# --------------------------------------------------
+# ==================================================
 # HOME
-# --------------------------------------------------
+# ==================================================
 
 @app.get("/")
 def home():
@@ -78,9 +84,9 @@ def home():
     }
 
 
-# --------------------------------------------------
+# ==================================================
 # HEALTH CHECK
-# --------------------------------------------------
+# ==================================================
 
 @app.get("/api/health")
 def health_check():
@@ -388,40 +394,28 @@ def save_quiz_history(
     db: Session = Depends(get_db)
 ):
 
-    # -----------------------------
     # Validate total questions
-    # -----------------------------
-
     if history.total_questions <= 0:
         raise HTTPException(
             status_code=400,
             detail="Total questions must be greater than 0"
         )
 
-    # -----------------------------
     # Validate correct answers
-    # -----------------------------
-
     if history.correct_answers < 0:
         raise HTTPException(
             status_code=400,
             detail="Correct answers cannot be negative"
         )
 
-    # -----------------------------
     # Validate incorrect answers
-    # -----------------------------
-
     if history.incorrect_answers < 0:
         raise HTTPException(
             status_code=400,
             detail="Incorrect answers cannot be negative"
         )
 
-    # -----------------------------
     # Validate answer count
-    # -----------------------------
-
     if (
         history.correct_answers +
         history.incorrect_answers
@@ -432,10 +426,7 @@ def save_quiz_history(
             detail="Invalid quiz result"
         )
 
-    # -----------------------------
     # Calculate score
-    # -----------------------------
-
     score = round(
         (
             history.correct_answers /
@@ -443,10 +434,7 @@ def save_quiz_history(
         ) * 100
     )
 
-    # -----------------------------
     # Create history record
-    # -----------------------------
-
     new_history = models.QuizHistory(
         user_id=current_user.id,
         category=history.category or "Mixed Practice",
@@ -456,10 +444,7 @@ def save_quiz_history(
         score=score
     )
 
-    # -----------------------------
     # Save to database
-    # -----------------------------
-
     try:
         db.add(new_history)
         db.commit()
