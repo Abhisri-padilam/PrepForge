@@ -15,6 +15,14 @@ function App() {
 
   const handleLandingClick = () => {
     setShowLanding(false);
+
+    const token =
+      localStorage.getItem("token") ||
+      localStorage.getItem("access_token");
+
+    if (!token) {
+      setIsAuthenticated(false);
+    }
   };
 
   // =========================================================
@@ -52,10 +60,26 @@ function App() {
   // =========================================================
 
   const [activeSection, setActiveSection] =
-    useState("practice");
+    useState("jdPractice");
 
   const [selectedCategory, setSelectedCategory] =
     useState("All");
+
+  // =========================================================
+  // JD BASED PRACTICE
+  // =========================================================
+
+  const [jobDescription, setJobDescription] =
+    useState("");
+
+  const [detectedSkills, setDetectedSkills] =
+    useState([]);
+
+  const [jdLoading, setJdLoading] =
+    useState(false);
+
+  const [jdError, setJdError] =
+    useState("");
 
   // =========================================================
   // QUESTIONS
@@ -70,9 +94,11 @@ function App() {
   const [selectedAnswer, setSelectedAnswer] =
     useState("");
 
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] =
+    useState({});
 
-  const [score, setScore] = useState(0);
+  const [score, setScore] =
+    useState(0);
 
   const [submitted, setSubmitted] =
     useState(false);
@@ -84,8 +110,11 @@ function App() {
   // LOADING / ERROR
   // =========================================================
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
 
   // =========================================================
   // CELEBRATION
@@ -101,7 +130,8 @@ function App() {
   // TIMER
   // =========================================================
 
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] =
+    useState(30);
 
   // =========================================================
   // HISTORY
@@ -135,7 +165,7 @@ function App() {
     }
 
     setIsAuthenticated(true);
-    setActiveSection("practice");
+    setActiveSection("jdPractice");
   };
 
   // =========================================================
@@ -213,6 +243,7 @@ function App() {
       if (data.name) {
         setParticipantName(data.name);
       }
+
     } catch (err) {
       console.error(
         "Profile error:",
@@ -223,6 +254,7 @@ function App() {
         err.message ||
           "Unable to load profile"
       );
+
     } finally {
       setProfileLoading(false);
     }
@@ -253,6 +285,7 @@ function App() {
       setAllQuestions(data);
 
       setLoading(false);
+
     } catch (err) {
       console.error(err);
 
@@ -262,6 +295,135 @@ function App() {
 
       setLoading(false);
     }
+  };
+
+  // =========================================================
+  // JD BASED PRACTICE
+  // =========================================================
+
+  const analyzeJobDescription = async () => {
+    if (!jobDescription.trim()) {
+      setJdError(
+        "Please enter a job description first."
+      );
+      return;
+    }
+
+    try {
+      setJdLoading(true);
+      setJdError("");
+
+      const response = await fetch(
+        `${API_URL}/api/jd-practice`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            job_description:
+              jobDescription,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail ||
+            "Unable to analyze job description"
+        );
+      }
+
+      setDetectedSkills(
+        data.skills || []
+      );
+
+      if (
+        !data.questions ||
+        data.questions.length === 0
+      ) {
+        setQuestions([]);
+
+        setJdError(
+          "No questions are available for the detected skills."
+        );
+
+        return;
+      }
+
+      setQuestions(data.questions);
+
+      setAllQuestions(
+        data.questions
+      );
+
+      setSelectedCategory(
+        data.skills &&
+        data.skills.length > 0
+          ? data.skills.join(", ")
+          : "JD Practice"
+      );
+
+    } catch (err) {
+      console.error(
+        "JD practice error:",
+        err
+      );
+
+      setDetectedSkills([]);
+
+      setJdError(
+        err.message ||
+          "Unable to analyze the job description"
+      );
+
+    } finally {
+      setJdLoading(false);
+    }
+  };
+
+  // =========================================================
+  // START JD QUIZ
+  // =========================================================
+
+  const startJDQuiz = () => {
+    if (questions.length === 0) {
+      setJdError(
+        "Analyze a job description before starting practice."
+      );
+      return;
+    }
+
+    setCurrentQuestion(0);
+    setSelectedAnswer("");
+    setAnswers({});
+    setScore(0);
+    setSubmitted(false);
+    setQuizFinished(false);
+    setTimeLeft(30);
+
+    setActiveSection("jdQuiz");
+  };
+
+  // =========================================================
+  // BACK TO JD PRACTICE
+  // =========================================================
+
+  const backToJDPractice = () => {
+    setQuizFinished(false);
+    setSubmitted(false);
+    setCurrentQuestion(0);
+    setSelectedAnswer("");
+    setAnswers({});
+    setScore(0);
+    setTimeLeft(30);
+
+    setActiveSection("jdPractice");
   };
 
   // =========================================================
@@ -294,10 +456,11 @@ function App() {
         );
       }
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      const formattedHistory = data.map(
-        (item) => ({
+      const formattedHistory =
+        data.map((item) => ({
           id: item.id,
 
           name:
@@ -305,9 +468,11 @@ function App() {
             profile.name ||
             "Participant",
 
-          score: item.correct_answers,
+          score:
+            item.correct_answers,
 
-          total: item.total_questions,
+          total:
+            item.total_questions,
 
           percentage:
             item.total_questions > 0
@@ -322,25 +487,33 @@ function App() {
             item.correct_answers +
             item.incorrect_answers,
 
-          correct: item.correct_answers,
+          correct:
+            item.correct_answers,
 
-          incorrect: item.incorrect_answers,
+          incorrect:
+            item.incorrect_answers,
 
           category:
-            item.category || "Mixed",
+            item.category ||
+            "Mixed",
 
-          date: new Date(
-            item.created_at
-          ).toLocaleString(),
-        })
+          date:
+            new Date(
+              item.created_at
+            ).toLocaleString(),
+        }));
+
+      setHistory(
+        formattedHistory
       );
-
-      setHistory(formattedHistory);
 
       localStorage.setItem(
         "prepforge_history",
-        JSON.stringify(formattedHistory)
+        JSON.stringify(
+          formattedHistory
+        )
       );
+
     } catch (err) {
       console.error(
         "History fetch error:",
@@ -354,8 +527,10 @@ function App() {
   // =========================================================
 
   useEffect(() => {
-    fetchQuestions();
-  }, []);
+    if (isAuthenticated) {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   // =========================================================
   // FETCH PROFILE AFTER LOGIN
@@ -377,7 +552,7 @@ function App() {
       loading ||
       quizFinished ||
       submitted ||
-      activeSection !== "practice" ||
+      activeSection !== "jdQuiz" ||
       questions.length === 0
     ) {
       return;
@@ -396,6 +571,7 @@ function App() {
 
     return () =>
       clearInterval(timer);
+
   }, [
     timeLeft,
     loading,
@@ -449,7 +625,8 @@ function App() {
 
     setAnswers((previous) => ({
       ...previous,
-      [question.id]: selectedAnswer,
+      [question.id]:
+        selectedAnswer,
     }));
 
     if (correct) {
@@ -488,6 +665,7 @@ function App() {
 
       setSubmitted(false);
       setTimeLeft(30);
+
     } else {
       finishQuiz();
     }
@@ -557,7 +735,8 @@ function App() {
           const q =
             questions.find(
               (item) =>
-                item.id === Number(id)
+                item.id ===
+                Number(id)
             );
 
           return (
@@ -584,9 +763,10 @@ function App() {
         : 0;
 
     const category =
-      selectedCategory === "All"
-        ? "Mixed"
-        : selectedCategory;
+      selectedCategory &&
+      selectedCategory !== "All"
+        ? selectedCategory
+        : "JD Practice";
 
     // --------------------------------------------
     // GET LOGIN TOKEN
@@ -594,7 +774,9 @@ function App() {
 
     const token =
       localStorage.getItem("token") ||
-      localStorage.getItem("access_token");
+      localStorage.getItem(
+        "access_token"
+      );
 
     if (!token) {
       alert(
@@ -604,7 +786,7 @@ function App() {
     }
 
     // --------------------------------------------
-    // SAVE TO FASTAPI + MYSQL
+    // SAVE TO FASTAPI + POSTGRESQL
     // --------------------------------------------
 
     try {
@@ -633,7 +815,8 @@ function App() {
             incorrect_answers:
               incorrect,
 
-            score: percentage,
+            score:
+              percentage,
           }),
         }
       );
@@ -663,39 +846,50 @@ function App() {
       // --------------------------------------------
 
       const result = {
-        id: savedHistory.id,
+        id:
+          savedHistory.id,
 
         name:
           participantName ||
           profile.name ||
           "Participant",
 
-        score: correctAnswers,
+        score:
+          correctAnswers,
 
-        total: questions.length,
+        total:
+          questions.length,
 
-        percentage: percentage,
+        percentage:
+          percentage,
 
-        attempted: attempted,
+        attempted:
+          attempted,
 
-        correct: correctAnswers,
+        correct:
+          correctAnswers,
 
-        incorrect: incorrect,
+        incorrect:
+          incorrect,
 
-        category: category,
+        category:
+          category,
 
-        date: new Date(
-          savedHistory.created_at
-        ).toLocaleString(),
+        date:
+          new Date(
+            savedHistory.created_at
+          ).toLocaleString(),
       };
 
       setHistory(
         (previous) => {
           const newHistory = [
             result,
+
             ...previous.filter(
               (item) =>
-                item.id !== result.id
+                item.id !==
+                result.id
             ),
           ];
 
@@ -746,36 +940,8 @@ function App() {
     setQuizFinished(false);
     setShowCelebration(false);
     setTimeLeft(30);
-    setActiveSection("practice");
-  };
 
-  // =========================================================
-  // START CATEGORY QUIZ
-  // =========================================================
-
-  const startCategory = (category) => {
-    if (category === "All") {
-      setQuestions(allQuestions);
-    } else {
-      const filtered =
-        allQuestions.filter(
-          (item) =>
-            item.category === category
-        );
-
-      setQuestions(filtered);
-    }
-
-    setSelectedCategory(category);
-    setCurrentQuestion(0);
-    setSelectedAnswer("");
-    setAnswers({});
-    setScore(0);
-    setSubmitted(false);
-    setQuizFinished(false);
-    setTimeLeft(30);
-
-    setActiveSection("practice");
+    setActiveSection("jdPractice");
   };
 
   // =========================================================
@@ -838,6 +1004,7 @@ function App() {
   if (loading) {
     return (
       <div className="loading-screen">
+
         <div className="loader"></div>
 
         <h2>
@@ -847,6 +1014,7 @@ function App() {
         <p>
           Preparing your questions 🚀
         </p>
+
       </div>
     );
   }
@@ -858,6 +1026,7 @@ function App() {
   if (error) {
     return (
       <div className="error-screen">
+
         <div className="error-card">
 
           <div className="error-icon">
@@ -884,6 +1053,7 @@ function App() {
           </button>
 
         </div>
+
       </div>
     );
   }
@@ -924,9 +1094,6 @@ function App() {
       0
     );
 
-  // Overall accuracy is based on questions actually attempted,
-  // not the total number of questions in all quizzes.
-  // Example: 11 correct out of 12 attempted = 92%.
   const overallAccuracy =
     totalAttempted > 0
       ? Math.round(
@@ -935,203 +1102,6 @@ function App() {
             100
         )
       : 0;
-
-  // =========================================================
-  // CATEGORIES
-  // =========================================================
-
-  const categories = [
-    "All",
-    ...new Set(
-      allQuestions.map(
-        (item) => item.category
-      )
-    ),
-  ];
-
-  // =========================================================
-  // SCORE SCREEN
-  // =========================================================
-
-  if (
-    quizFinished &&
-    activeSection === "practice"
-  ) {
-    const percentage =
-      questions.length > 0
-        ? Math.round(
-            (score /
-              questions.length) *
-              100
-          )
-        : 0;
-
-    let message =
-      "Keep Practicing! 💪";
-
-    if (percentage === 100) {
-      message =
-        "Excellent Work! 🏆";
-    } else if (percentage >= 80) {
-      message =
-        "Great Job! 🌟";
-    } else if (percentage >= 60) {
-      message =
-        "Good Effort! 👍";
-    }
-
-    return (
-      <div className="app">
-
-        {/* CONFETTI */}
-
-        <div className="confetti c1"></div>
-        <div className="confetti c2"></div>
-        <div className="confetti c3"></div>
-        <div className="confetti c4"></div>
-        <div className="confetti c5"></div>
-        <div className="confetti c6"></div>
-        <div className="confetti c7"></div>
-        <div className="confetti c8"></div>
-        <div className="confetti c9"></div>
-        <div className="confetti c10"></div>
-        <div className="confetti c11"></div>
-        <div className="confetti c12"></div>
-
-        <header className="app-header">
-
-          <h1>
-            PrepForge
-          </h1>
-
-          <p>
-            Practice Questions
-          </p>
-
-        </header>
-
-        <div className="result-card">
-
-          <div className="trophy">
-            🏆
-          </div>
-
-          <div className="completed-banner">
-            🎉 Quiz Completed! 🎉
-          </div>
-
-          <div className="participant-name">
-            👋 Well done,{" "}
-            <strong>
-              {participantName}
-            </strong>
-            !
-          </div>
-
-          <div className="score">
-            {score}
-
-            <span>
-              {" "}
-              / {questions.length}
-            </span>
-          </div>
-
-          <div className="percentage">
-            {percentage}%
-          </div>
-
-          <div className="result-message">
-
-            <h2>
-              {message}
-            </h2>
-
-            <p>
-              You completed the quiz.
-              Keep improving your
-              placement skills! 🚀
-            </p>
-
-          </div>
-
-          <div className="stats">
-
-            <div className="stat">
-
-              <div className="stat-icon">
-                📋
-              </div>
-
-              <div className="stat-title">
-                Total Questions
-              </div>
-
-              <div className="stat-value">
-                {questions.length}
-              </div>
-
-            </div>
-
-            <div className="stat">
-
-              <div className="stat-icon">
-                ✅
-              </div>
-
-              <div className="stat-title">
-                Correct Answers
-              </div>
-
-              <div className="stat-value">
-                {score}
-              </div>
-
-            </div>
-
-            <div className="stat">
-
-              <div className="stat-icon">
-                🎯
-              </div>
-
-              <div className="stat-title">
-                Accuracy
-              </div>
-
-              <div className="stat-value">
-                {percentage}%
-              </div>
-
-            </div>
-
-          </div>
-
-          <button
-            className="restart-btn"
-            onClick={restartQuiz}
-          >
-            🔄 Restart Quiz
-          </button>
-
-          <button
-            className="restart-btn"
-            style={{
-              marginTop: "12px",
-            }}
-            onClick={() =>
-              setActiveSection("progress")
-            }
-          >
-            📊 View My Progress
-          </button>
-
-        </div>
-
-      </div>
-    );
-  }
-
   // =========================================================
   // SIDEBAR
   // =========================================================
@@ -1149,41 +1119,28 @@ function App() {
 
       <div className="sidebar-menu">
 
-        <div
-          className={`menu-item ${
-            activeSection ===
-            "practice"
-              ? "active"
-              : ""
-          }`}
-          onClick={() =>
-            navigate("practice")
-          }
-        >
-          🏠
-
-          <span>
-            Practice
-          </span>
-        </div>
+        {/* JD PRACTICE */}
 
         <div
           className={`menu-item ${
             activeSection ===
-            "categories"
+            "jdPractice"
               ? "active"
               : ""
           }`}
           onClick={() =>
-            navigate("categories")
+            navigate("jdPractice")
           }
         >
-          📚
+          🎯
 
           <span>
-            Categories
+            JD Practice
           </span>
         </div>
+
+
+        {/* PROGRESS */}
 
         <div
           className={`menu-item ${
@@ -1203,6 +1160,9 @@ function App() {
           </span>
         </div>
 
+
+        {/* LEADERBOARD */}
+
         <div
           className={`menu-item ${
             activeSection ===
@@ -1220,6 +1180,9 @@ function App() {
             Leaderboard
           </span>
         </div>
+
+
+        {/* HISTORY */}
 
         <div
           className={`menu-item ${
@@ -1239,6 +1202,9 @@ function App() {
           </span>
         </div>
 
+
+        {/* PROFILE */}
+
         <div
           className={`menu-item ${
             activeSection ===
@@ -1257,6 +1223,9 @@ function App() {
           </span>
         </div>
 
+
+        {/* LOGOUT */}
+
         <div
           className="menu-item"
           onClick={handleLogout}
@@ -1272,6 +1241,9 @@ function App() {
         </div>
 
       </div>
+
+
+      {/* STREAK */}
 
       <div className="streak-card">
 
@@ -1300,13 +1272,318 @@ function App() {
     </aside>
   );
 
+
+  // =========================================================
+  // JD PRACTICE PAGE
+  // =========================================================
+
+  if (
+    activeSection ===
+    "jdPractice"
+  ) {
+
+    return (
+      <div className="app">
+
+        <Sidebar />
+
+
+        <main className="main-content">
+
+          <div className="dashboard-page">
+
+
+            {/* HEADING */}
+
+            <div className="dashboard-heading">
+
+              <h1>
+                🎯 JD-Based Practice
+              </h1>
+
+              <p>
+                Paste a job description and
+                practice questions based on
+                the required skills.
+              </p>
+
+            </div>
+
+
+            {/* JOB DESCRIPTION */}
+
+            <div className="dashboard-card">
+
+              <h2>
+                📄 Job Description
+              </h2>
+
+              <p>
+                Enter the job description
+                provided by the company.
+              </p>
+
+
+              <textarea
+                value={jobDescription}
+                onChange={(event) => {
+
+                  setJobDescription(
+                    event.target.value
+                  );
+
+                  setJdError("");
+                }}
+
+                placeholder="Paste the job description here..."
+
+                rows={12}
+
+                style={{
+                  width: "100%",
+                  boxSizing:
+                    "border-box",
+                  padding: "16px",
+                  marginTop: "15px",
+                  borderRadius: "12px",
+                  border:
+                    "1px solid #d9d9e3",
+                  fontSize: "16px",
+                  resize: "vertical",
+                  fontFamily:
+                    "inherit",
+                  lineHeight: "1.6",
+                }}
+              />
+
+
+              {/* ERROR */}
+
+              {jdError && (
+
+                <p
+                  style={{
+                    color: "#d32f2f",
+                    marginTop: "12px",
+                    fontWeight: "600",
+                  }}
+                >
+                  ⚠️ {jdError}
+                </p>
+
+              )}
+
+
+              {/* ANALYZE */}
+
+              <button
+                className="restart-btn"
+
+                onClick={
+                  analyzeJobDescription
+                }
+
+                disabled={jdLoading}
+
+                style={{
+                  marginTop: "16px",
+                  opacity:
+                    jdLoading
+                      ? 0.7
+                      : 1,
+                }}
+              >
+
+                {jdLoading
+                  ? "🔍 Analyzing..."
+                  : "🔍 Analyze Job Description"}
+
+              </button>
+
+            </div>
+
+
+            {/* DETECTED SKILLS */}
+
+            {detectedSkills.length > 0 && (
+
+              <div className="dashboard-card">
+
+                <h2>
+                  🧠 Detected Skills
+                </h2>
+
+                <p>
+                  Skills identified from
+                  the job description:
+                </p>
+
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap:
+                      "wrap",
+                    gap: "10px",
+                    marginTop:
+                      "15px",
+                  }}
+                >
+
+                  {detectedSkills.map(
+                    (skill) => (
+
+                      <span
+                        key={skill}
+
+                        style={{
+                          padding:
+                            "8px 14px",
+
+                          borderRadius:
+                            "20px",
+
+                          background:
+                            "#f0ebff",
+
+                          fontWeight:
+                            "600",
+                        }}
+                      >
+                        {skill}
+                      </span>
+
+                    )
+                  )}
+
+                </div>
+
+
+                <p
+                  style={{
+                    marginTop:
+                      "18px",
+                  }}
+                >
+                  🎯{" "}
+                  <strong>
+                    {questions.length}
+                  </strong>{" "}
+                  relevant questions
+                  found.
+                </p>
+
+
+                <button
+                  className="restart-btn"
+
+                  onClick={
+                    startJDQuiz
+                  }
+
+                  style={{
+                    marginTop:
+                      "10px",
+                  }}
+                >
+                  🚀 Start JD Practice
+                </button>
+
+              </div>
+
+            )}
+
+
+            {/* HOW IT WORKS */}
+
+            <div className="dashboard-card">
+
+              <h2>
+                💡 How JD Practice Works
+              </h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gap: "15px",
+                  marginTop: "18px",
+                }}
+              >
+
+                <div>
+                  <strong>
+                    1️⃣ Paste the JD
+                  </strong>
+
+                  <p>
+                    Copy the job description
+                    from the company and
+                    paste it above.
+                  </p>
+                </div>
+
+
+                <div>
+                  <strong>
+                    2️⃣ Analyze Skills
+                  </strong>
+
+                  <p>
+                    PrepForge identifies the
+                    technical skills mentioned
+                    in the JD.
+                  </p>
+                </div>
+
+
+                <div>
+                  <strong>
+                    3️⃣ Practice
+                  </strong>
+
+                  <p>
+                    Get random questions
+                    related to the detected
+                    skills.
+                  </p>
+                </div>
+
+
+                <div>
+                  <strong>
+                    4️⃣ Track Your Score
+                  </strong>
+
+                  <p>
+                    Complete the quiz and
+                    your result is saved in
+                    your history.
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </main>
+
+      </div>
+    );
+  }
+
+
   // =========================================================
   // PROFILE PAGE
   // =========================================================
 
   if (
-    activeSection === "profile"
+    activeSection ===
+    "profile"
   ) {
+
     return (
       <div className="app">
 
@@ -1328,6 +1605,7 @@ function App() {
               </p>
 
             </div>
+
 
             {profileLoading ? (
 
@@ -1351,9 +1629,12 @@ function App() {
                   {profileError}
                 </p>
 
+
                 <button
                   className="restart-btn"
-                  onClick={fetchProfile}
+                  onClick={
+                    fetchProfile
+                  }
                 >
                   🔄 Try Again
                 </button>
@@ -1376,14 +1657,17 @@ function App() {
 
                 </div>
 
+
                 <h2>
                   {profile.name ||
                     participantName}
                 </h2>
 
+
                 <p className="profile-role">
                   PrepForge Participant
                 </p>
+
 
                 <div className="profile-details">
 
@@ -1400,6 +1684,7 @@ function App() {
 
                   </div>
 
+
                   <div className="profile-detail">
 
                     <span>
@@ -1412,6 +1697,7 @@ function App() {
                     </strong>
 
                   </div>
+
 
                   <div className="profile-detail">
 
@@ -1426,6 +1712,7 @@ function App() {
 
                   </div>
 
+
                   <div className="profile-detail">
 
                     <span>
@@ -1437,6 +1724,7 @@ function App() {
                     </strong>
 
                   </div>
+
 
                   <div className="profile-detail">
 
@@ -1464,113 +1752,16 @@ function App() {
     );
   }
 
-  // =========================================================
-  // CATEGORIES PAGE
-  // =========================================================
-
-  if (
-    activeSection ===
-    "categories"
-  ) {
-    return (
-      <div className="app">
-
-        <Sidebar />
-
-        <main className="main-content">
-
-          <div className="dashboard-page">
-
-            <div className="dashboard-heading">
-
-              <h1>
-                📚 Categories
-              </h1>
-
-              <p>
-                Choose a category and
-                start practicing
-              </p>
-
-            </div>
-
-            <div className="category-grid">
-
-              {categories.map(
-                (category) => {
-
-                  const count =
-                    category === "All"
-                      ? allQuestions.length
-                      : allQuestions.filter(
-                          (item) =>
-                            item.category ===
-                            category
-                        ).length;
-
-                  return (
-                    <div
-                      className="category-card"
-                      key={category}
-                      onClick={() =>
-                        startCategory(
-                          category
-                        )
-                      }
-                    >
-
-                      <div className="category-icon">
-
-                        {category ===
-                        "Aptitude"
-                          ? "🧮"
-                          : category ===
-                            "Reasoning"
-                          ? "🧠"
-                          : category ===
-                            "Programming"
-                          ? "💻"
-                          : "📚"}
-
-                      </div>
-
-                      <h2>
-                        {category}
-                      </h2>
-
-                      <p>
-                        {count} question
-                        {count !== 1
-                          ? "s"
-                          : ""}
-                      </p>
-
-                      <button>
-                        Start Practice →
-                      </button>
-
-                    </div>
-                  );
-                }
-              )}
-
-            </div>
-
-          </div>
-
-        </main>
-
-      </div>
-    );
-  }
 
   // =========================================================
   // PROGRESS PAGE
   // =========================================================
 
   if (
-    activeSection === "progress"
+    activeSection ===
+    "progress"
   ) {
+
     return (
       <div className="app">
 
@@ -1593,7 +1784,9 @@ function App() {
 
             </div>
 
+
             <div className="progress-dashboard">
+
 
               <div className="big-stat-card">
 
@@ -1611,6 +1804,7 @@ function App() {
 
               </div>
 
+
               <div className="big-stat-card">
 
                 <div>
@@ -1627,6 +1821,7 @@ function App() {
 
               </div>
 
+
               <div className="big-stat-card">
 
                 <div>
@@ -1642,6 +1837,7 @@ function App() {
                 </strong>
 
               </div>
+
 
               <div className="big-stat-card">
 
@@ -1661,22 +1857,27 @@ function App() {
 
             </div>
 
+
             <div className="dashboard-card">
 
               <h2>
                 📈 Performance Overview
               </h2>
 
+
               <div className="progress-large">
 
                 <div
                   className="progress-large-fill"
+
                   style={{
-                    width: `${overallAccuracy}%`,
+                    width:
+                      `${overallAccuracy}%`,
                   }}
                 ></div>
 
               </div>
+
 
               <p>
                 Your overall accuracy is{" "}
@@ -1686,6 +1887,7 @@ function App() {
               </p>
 
             </div>
+
 
             <div className="dashboard-card">
 
@@ -1710,13 +1912,16 @@ function App() {
     );
   }
 
+
   // =========================================================
   // HISTORY PAGE
   // =========================================================
 
   if (
-    activeSection === "history"
+    activeSection ===
+    "history"
   ) {
+
     return (
       <div className="app">
 
@@ -1739,6 +1944,7 @@ function App() {
 
             </div>
 
+
             {history.length === 0 ? (
 
               <div className="dashboard-card empty-card">
@@ -1752,18 +1958,23 @@ function App() {
                 </h2>
 
                 <p>
-                  Complete your first quiz
-                  and your result will appear
-                  here.
+                  Complete your first
+                  JD-based quiz and
+                  your result will
+                  appear here.
                 </p>
+
 
                 <button
                   className="restart-btn"
+
                   onClick={() =>
-                    navigate("practice")
+                    navigate(
+                      "jdPractice"
+                    )
                   }
                 >
-                  🚀 Start Practice
+                  🚀 Start JD Practice
                 </button>
 
               </div>
@@ -1784,11 +1995,12 @@ function App() {
                         #{index + 1}
                       </div>
 
+
                       <div className="history-main">
 
                         <h2>
                           {item.category ||
-                            "Mixed"}{" "}
+                            "JD Practice"}{" "}
                           Practice
                         </h2>
 
@@ -1802,6 +2014,7 @@ function App() {
                         </span>
 
                       </div>
+
 
                       <div className="history-score">
 
@@ -1833,6 +2046,7 @@ function App() {
     );
   }
 
+
   // =========================================================
   // LEADERBOARD PAGE
   // =========================================================
@@ -1851,6 +2065,7 @@ function App() {
           a.percentage
       )
       .slice(0, 10);
+
 
     return (
       <div className="app">
@@ -1873,6 +2088,7 @@ function App() {
 
             </div>
 
+
             {leaderboard.length ===
             0 ? (
 
@@ -1887,8 +2103,8 @@ function App() {
                 </h2>
 
                 <p>
-                  Complete a quiz to
-                  appear here.
+                  Complete a JD-based
+                  quiz to appear here.
                 </p>
 
               </div>
@@ -1906,6 +2122,7 @@ function App() {
                           ? "first-place"
                           : ""
                       }`}
+
                       key={item.id}
                     >
 
@@ -1921,6 +2138,7 @@ function App() {
 
                       </div>
 
+
                       <div className="leader-user">
 
                         <div className="leader-avatar">
@@ -1930,6 +2148,7 @@ function App() {
                             .toUpperCase()}
 
                         </div>
+
 
                         <div>
 
@@ -1944,6 +2163,7 @@ function App() {
                         </div>
 
                       </div>
+
 
                       <div className="leader-score">
 
@@ -1974,701 +2194,477 @@ function App() {
       </div>
     );
   }
-
-  // =========================================================
-  // PRACTICE PAGE
-  // =========================================================
-
-  if (
-    questions.length === 0
-  ) {
-    return (
-      <div className="error-screen">
-
-        <div className="error-card">
-
-          <div className="error-icon">
-            📚
-          </div>
-
-          <h1>
-            PrepForge
-          </h1>
-
-          <h2>
-            No Questions Available
-          </h2>
-
-          <p>
-            Please add questions to the
-            database.
-          </p>
-
-          <button
-            className="retry-btn"
-            onClick={fetchQuestions}
-          >
-            🔄 Refresh
-          </button>
-
-        </div>
-
-      </div>
-    );
-  }
-
-  // =========================================================
-  // QUIZ CALCULATIONS
-  // =========================================================
-
-  const progress =
-    ((currentQuestion + 1) /
-      questions.length) *
-    100;
-
-  const answeredCount =
-    Object.keys(answers).length;
-
-  const incorrectCount =
-    Object.keys(answers).filter(
-      (id) => {
-        const q =
-          questions.find(
-            (item) =>
-              item.id === Number(id)
-          );
-
-        return (
-          q &&
-          answers[id] !==
-            q.correct_answer
-        );
-      }
-    ).length;
-
-  const unansweredCount =
-    questions.length -
-    answeredCount;
-
-  const options = [
-    {
-      letter: "A",
-      value: question.option_a,
-    },
-    {
-      letter: "B",
-      value: question.option_b,
-    },
-    {
-      letter: "C",
-      value: question.option_c,
-    },
-    {
-      letter: "D",
-      value: question.option_d,
-    },
-  ];
-
-  // =========================================================
-  // PRACTICE UI
-  // =========================================================
-
+        {/* ==================================================
+          JD QUIZ
+      ================================================== */}
+if (activeSection === "jdQuiz") {
   return (
-    <div className="app">
-
-      <div className="floating-shape shape1"></div>
-      <div className="floating-shape shape2"></div>
-      <div className="floating-shape shape3"></div>
-
-      {/* SIDEBAR */}
-
-      <Sidebar />
-
-      {/* MAIN */}
-
-      <main className="main-content">
-
-        <div className="quiz-header">
-
-          <div>
-
-            <h1>
-              Practice Questions ✨
-            </h1>
-
-            <p>
-              Test your knowledge and
-              boost your skills
-            </p>
-
-          </div>
-
-          <div className="category-badge">
-            📚 {question.category}
-          </div>
-
-        </div>
-
-        {/* QUIZ GRID */}
-
-        <div className="quiz-layout">
-
-          {/* QUESTION */}
-
-          <section className="question-section">
-
-            <div className="question-card">
-
-              {/* TOP */}
-
-              <div className="question-top">
-
-                <div className="question-number">
-
-                  Question{" "}
-
-                  <strong>
-                    {currentQuestion + 1}
-                  </strong>
-
-                  {" "}of{" "}
-
-                  <strong>
-                    {questions.length}
-                  </strong>
-
-                </div>
-
-                <div
-                  className={`timer ${
-                    timeLeft <= 10
-                      ? "timer-danger"
-                      : ""
-                  }`}
-                >
-
-                  ⏱️ 00:
-
-                  {String(
-                    timeLeft
-                  ).padStart(2, "0")}
-
-                </div>
-
-              </div>
-
-              {/* PROGRESS */}
-
-              <div className="progress-container">
-
-                <div className="progress-bar">
-
-                  <div
-                    className="progress-fill"
-                    style={{
-                      width: `${progress}%`,
-                    }}
-                  ></div>
-
-                </div>
-
-                <span>
-                  {Math.round(
-                    progress
-                  )}
-                  %
-                </span>
-
-              </div>
-
-              {/* QUESTION */}
-
-              <h2 className="question-text">
-
-                {currentQuestion + 1}.
-                {" "}
-                {question.question}
-
-              </h2>
-
-              {/* OPTIONS */}
-
-              <div className="options">
-
-                {options.map(
-                  (option) => {
-
-                    const selected =
-                      selectedAnswer ===
-                      option.value;
-
-                    const correct =
-                      submitted &&
-                      option.value ===
-                        question.correct_answer;
-
-                    const wrong =
-                      submitted &&
-                      selected &&
-                      option.value !==
-                        question.correct_answer;
-
-                    return (
-                      <button
-                        key={
-                          option.letter
-                        }
-                        className={`
-                          option
-                          ${
-                            selected
-                              ? "selected"
-                              : ""
-                          }
-                          ${
-                            correct
-                              ? "correct"
-                              : ""
-                          }
-                          ${
-                            wrong
-                              ? "wrong"
-                              : ""
-                          }
-                        `}
-                        onClick={() =>
-                          handleAnswer(
-                            option.value
-                          )
-                        }
-                        disabled={
-                          submitted
-                        }
-                      >
-
-                        <span className="option-letter">
-                          {option.letter}
-                        </span>
-
-                        <span className="option-text">
-                          {option.value}
-                        </span>
-
-                        <span className="option-icon">
-
-                          {correct &&
-                            "✓"}
-
-                          {wrong &&
-                            "✕"}
-
-                          {!submitted &&
-                            selected &&
-                            "●"}
-
-                        </span>
-
-                      </button>
-                    );
-                  }
-                )}
-
-              </div>
-
-              {/* FEEDBACK */}
-
-              {submitted && (
-
-                <div
-                  className={
-                    isCorrect
-                      ? "answer-feedback correct-feedback"
-                      : "answer-feedback wrong-feedback"
-                  }
-                >
-
-                  {isCorrect ? (
-
-                    <>
-                      🎉 Amazing!
-
-                      <strong>
-                        Correct Answer!
-                      </strong>
-                    </>
-
-                  ) : (
-
-                    <>
-                      ❌ Not Quite!
-
-                      <strong>
-                        Correct Answer:{" "}
-                        {
-                          question.correct_answer
-                        }
-                      </strong>
-                    </>
-
-                  )}
-
-                </div>
-
-              )}
-
-              {/* SUBMIT */}
-
-              {!submitted && (
-
-                <button
-                  className="submit-btn"
-                  onClick={
-                    submitAnswer
-                  }
-                >
-                  🚀 Submit Answer
-                </button>
-
-              )}
-
-            </div>
-
-            {/* NAVIGATION */}
-
-            <div className="navigation">
-
-              <button
-                className="nav-btn"
-                onClick={
-                  previousQuestion
-                }
-                disabled={
-                  currentQuestion ===
-                  0
-                }
-              >
-                ← Previous
-              </button>
-
-              {submitted && (
-
-                <button
-                  className="nav-btn next-btn"
-                  onClick={
-                    nextQuestion
-                  }
-                >
-
-                  {currentQuestion ===
-                  questions.length - 1
-                    ? "Finish Quiz 🏆"
-                    : "Next Question →"}
-
-                </button>
-
-              )}
-
-            </div>
-
-            {/* FEATURES */}
-
-            <div className="features">
-
-              <div className="feature">
-
-                <div className="feature-icon purple">
-                  🎯
-                </div>
-
-                <div>
-
-                  <h3>
-                    Focus
-                  </h3>
-
-                  <p>
-                    Stay focused and
-                    achieve your goals
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="feature">
-
-                <div className="feature-icon pink">
-                  ⚡
-                </div>
-
-                <div>
-
-                  <h3>
-                    Practice
-                  </h3>
-
-                  <p>
-                    Practice daily to
-                    improve your skills
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="feature">
-
-                <div className="feature-icon orange">
-                  🏆
-                </div>
-
-                <div>
-
-                  <h3>
-                    Excel
-                  </h3>
-
-                  <p>
-                    Excel in your
-                    placement preparation
-                  </p>
-
-                </div>
-
-              </div>
-
-              <div className="feature">
-
-                <div className="feature-icon blue">
-                  ⭐
-                </div>
-
-                <div>
-
-                  <h3>
-                    Succeed
-                  </h3>
-
-                  <p>
-                    Success is within reach
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div className="tip-box">
-
-              💡{" "}
-
-              <strong>
-                Tip:
-              </strong>{" "}
-
-              Read each question
-              carefully before
-              answering.
-
-            </div>
-
-          </section>
-
-          {/* RIGHT SIDEBAR */}
-
-          <aside className="right-sidebar">
-
-            {/* PROGRESS */}
-
-            <div className="progress-card">
-
-              <h3>
-                Your Progress
-              </h3>
-
-              <div className="progress-circle">
-
-                <div>
-
-                  <strong>
-                    {answeredCount}/
-                    {questions.length}
-                  </strong>
-
-                  <span>
-                    Answered
-                  </span>
-
-                </div>
-
-              </div>
-
+        <>
+          {questions.length === 0 ? (
+            <div className="empty-state">
+              <h2>No questions available</h2>
               <p>
-
-                {Math.round(
-                  (answeredCount /
-                    questions.length) *
-                    100
-                )}
-                % Completed
-
+                No questions were found for the selected JD skills.
               </p>
 
+              <button
+                className="primary-btn"
+                onClick={backToJDPractice}
+              >
+                Back to JD Practice
+              </button>
+            </div>
+          ) : quizFinished ? (
+            /* ==================================================
+               JD QUIZ SCORE SCREEN
+            ================================================== */
+
+            <div className="quiz-result-page">
+
+              <div className="result-card">
+
+                <div className="result-icon">
+                  🎉
+                </div>
+
+                <h1>Practice Completed!</h1>
+
+                <p className="result-message">
+                  Great job! Here is your JD Practice result.
+                </p>
+
+                <div className="score-circle">
+                  <span>{score}</span>
+                  <small>/ {questions.length}</small>
+                </div>
+
+                <h2>
+                  {Math.round(
+                    (score / questions.length) * 100
+                  )}
+                  %
+                </h2>
+
+                <p className="score-label">
+                  Overall Score
+                </p>
+
+                <div className="result-stats">
+
+                  <div className="result-stat">
+                    <span className="stat-number">
+                      {score}
+                    </span>
+
+                    <span className="stat-label">
+                      Correct
+                    </span>
+                  </div>
+
+                  <div className="result-stat">
+                    <span className="stat-number">
+                      {questions.length - score}
+                    </span>
+
+                    <span className="stat-label">
+                      Incorrect
+                    </span>
+                  </div>
+
+                  <div className="result-stat">
+                    <span className="stat-number">
+                      {questions.length}
+                    </span>
+
+                    <span className="stat-label">
+                      Total
+                    </span>
+                  </div>
+
+                </div>
+
+                <div className="result-actions">
+
+                  <button
+                    className="primary-btn"
+                    onClick={restartQuiz}
+                  >
+                    Practice Again
+                  </button>
+
+                  <button
+                    className="secondary-btn"
+                    onClick={backToJDPractice}
+                  >
+                    Back to JD Practice
+                  </button>
+
+                </div>
+
+              </div>
+
             </div>
 
-            {/* QUICK STATS */}
+          ) : (
+            /* ==================================================
+               ACTIVE JD QUIZ
+            ================================================== */
 
-            <div className="quick-stats">
+            <div className="quiz-page">
 
-              <h3>
-                Quick Stats
-              </h3>
+              {/* QUIZ HEADER */}
 
-              <div className="stat-row">
+              <div className="quiz-header">
 
-                <span>
-                  🟢 Correct
-                </span>
+                <div>
+                  <h1>JD Based Practice</h1>
 
-                <strong className="green">
-                  {score}
-                </strong>
+                  <p>
+                    Answer questions based on your
+                    job description skills.
+                  </p>
+                </div>
 
-              </div>
-
-              <div className="stat-row">
-
-                <span>
-                  🔴 Incorrect
-                </span>
-
-                <strong className="red">
-                  {incorrectCount}
-                </strong>
-
-              </div>
-
-              <div className="stat-row">
-
-                <span>
-                  🔵 Unattempted
-                </span>
-
-                <strong className="blue-text">
-                  {unansweredCount}
-                </strong>
+                <div className="quiz-timer">
+                  ⏱️{" "}
+                  {Math.floor(timeLeft / 60)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                  {(timeLeft % 60)
+                    .toString()
+                    .padStart(2, "0")}
+                </div>
 
               </div>
 
-            </div>
 
-            {/* NAVIGATOR */}
+              {/* QUIZ CONTENT */}
 
-            <div className="navigator">
+              <div className="quiz-layout">
 
-              <h3>
-                Question Navigator
-              </h3>
+                {/* LEFT SIDE */}
 
-              <div className="question-buttons">
+                <div className="quiz-main">
 
-                {questions.map(
-                  (item, index) => {
+                  <div className="question-card">
 
-                    const answered =
-                      answers[item.id];
+                    {/* QUESTION NUMBER */}
 
-                    return (
+                    <div className="question-top">
+
+                      <span className="question-number">
+                        Question {currentQuestion + 1} of{" "}
+                        {questions.length}
+                      </span>
+
+                      <span className="question-category">
+                        {questions[currentQuestion]?.category}
+                      </span>
+
+                    </div>
+
+
+                    {/* QUESTION */}
+
+                    <h2 className="question-text">
+                      {questions[currentQuestion]?.question}
+                    </h2>
+
+
+                    {/* OPTIONS */}
+
+                    <div className="options-container">
+
+                      {[
+                        {
+                          key: "A",
+                          text: questions[currentQuestion]
+                            ?.option_a
+                        },
+                        {
+                          key: "B",
+                          text: questions[currentQuestion]
+                            ?.option_b
+                        },
+                        {
+                          key: "C",
+                          text: questions[currentQuestion]
+                            ?.option_c
+                        },
+                        {
+                          key: "D",
+                          text: questions[currentQuestion]
+                            ?.option_d
+                        }
+                      ].map((option) => {
+
+                        const isSelected =
+                          selectedAnswer === option.key;
+
+                      
+
+                        const isCorrect =
+                          submitted &&
+                          option.key ===
+                            questions[currentQuestion]
+                              ?.correct_answer;
+
+                        const isWrong =
+                          submitted &&
+                          isSelected &&
+                          option.key !==
+                            questions[currentQuestion]
+                              ?.correct_answer;
+
+                        return (
+                          <button
+                            key={option.key}
+                            className={`option ${
+                              isSelected
+                                ? "selected"
+                                : ""
+                            } ${
+                              isCorrect
+                                ? "correct"
+                                : ""
+                            } ${
+                              isWrong
+                                ? "incorrect"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              !submitted &&
+                              handleAnswer(option.key)
+                            }
+                            disabled={submitted}
+                          >
+
+                            <span className="option-letter">
+                              {option.key}
+                            </span>
+
+                            <span className="option-text">
+                              {option.text}
+                            </span>
+
+                          </button>
+                        );
+                      })}
+
+                    </div>
+
+
+                    {/* ANSWER FEEDBACK */}
+
+                    {submitted && (
+                      <div
+                        className={`answer-feedback ${
+                          selectedAnswer ===
+                          questions[currentQuestion]
+                            ?.correct_answer
+                            ? "correct-feedback"
+                            : "incorrect-feedback"
+                        }`}
+                      >
+
+                        {selectedAnswer ===
+                        questions[currentQuestion]
+                          ?.correct_answer ? (
+                          <>
+                            <strong>
+                              ✅ Correct!
+                            </strong>
+
+                            <p>
+                              Excellent answer.
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <strong>
+                              ❌ Incorrect
+                            </strong>
+
+                            <p>
+                              Correct answer:{" "}
+                              <b>
+                                {
+                                  questions[currentQuestion]
+                                    ?.correct_answer
+                                }
+                              </b>
+                            </p>
+                          </>
+                        )}
+
+                      </div>
+                    )}
+
+
+                    {/* QUIZ CONTROLS */}
+
+                    <div className="quiz-controls">
+
                       <button
-                        key={item.id}
-                        className={`
-                          question-nav-btn
-                          ${
-                            index ===
-                            currentQuestion
-                              ? "current"
-                              : ""
-                          }
-                          ${
-                            answered
-                              ? "answered"
-                              : ""
-                          }
-                        `}
-                        onClick={() =>
-                          goToQuestion(
-                            index
-                          )
+                        className="secondary-btn"
+                        onClick={previousQuestion}
+                        disabled={
+                          currentQuestion === 0
                         }
                       >
-                        {index + 1}
+                        ← Previous
                       </button>
-                    );
-                  }
-                )}
 
-              </div>
 
-              <div className="legend">
+                      {!submitted ? (
+                        <button
+                          className="primary-btn"
+                          onClick={submitAnswer}
+                          disabled={
+                            !selectedAnswer
+                          }
+                        >
+                          Submit Answer
+                        </button>
+                      ) : (
+                        <button
+                          className="primary-btn"
+                          onClick={nextQuestion}
+                        >
+                          {currentQuestion ===
+                          questions.length - 1
+                            ? "Finish Quiz"
+                            : "Next Question →"}
+                        </button>
+                      )}
 
-                <span>
-                  <i className="dot purple-dot"></i>
-                  Answered
-                </span>
+                    </div>
 
-                <span>
-                  <i className="dot gray-dot"></i>
-                  Unattempted
-                </span>
+                  </div>
+
+                </div>
+
+
+                {/* RIGHT SIDE */}
+
+                <div className="quiz-sidebar">
+
+                  <div className="quiz-progress-card">
+
+                    <h3>
+                      Quiz Progress
+                    </h3>
+
+                    <div className="progress-bar">
+
+                      <div
+                        className="progress-fill"
+                        style={{
+                          width: `${
+                            ((currentQuestion + 1) /
+                              questions.length) *
+                            100
+                          }%`
+                        }}
+                      />
+
+                    </div>
+
+                    <p>
+                      {currentQuestion + 1} /{" "}
+                      {questions.length} Questions
+                    </p>
+
+                  </div>
+
+
+                  {/* QUESTION NAVIGATION */}
+
+                  <div className="question-navigation">
+
+                    <h3>
+                      Questions
+                    </h3>
+
+                    <div className="question-grid">
+
+                      {questions.map(
+                        (item, index) => {
+
+                         const answered =
+  answers[questions[index]?.id] !== undefined;
+
+                          return (
+                            <button
+                              key={index}
+                              className={`question-number-btn ${
+                                index ===
+                                currentQuestion
+                                  ? "active"
+                                  : ""
+                              } ${
+                                answered
+                                  ? "answered"
+                                  : ""
+                              }`}
+                              onClick={() =>
+                                goToQuestion(index)
+                              }
+                            >
+                              {index + 1}
+                            </button>
+                          );
+                        }
+                      )}
+
+                    </div>
+
+                  </div>
+
+
+                  {/* QUIZ INFORMATION */}
+
+                  <div className="quiz-info-card">
+
+                    <h3>
+                      💡 Tips
+                    </h3>
+
+                    <ul>
+
+                      <li>
+                        Read every question
+                        carefully.
+                      </li>
+
+                      <li>
+                        Eliminate clearly wrong
+                        options.
+                      </li>
+
+                      <li>
+                        Keep an eye on the timer.
+                      </li>
+
+                      <li>
+                        Review your answers before
+                        finishing.
+                      </li>
+
+                    </ul>
+
+                  </div>
+
+                </div>
 
               </div>
 
             </div>
-
-          </aside>
-
-        </div>
-
-      </main>
-
-      {/* CORRECT ANSWER CELEBRATION */}
-
-      {showCelebration && (
-
-        <div className="celebration">
-
-          <div className="celebration-confetti">
-            🎉
-          </div>
-
-          <div className="celebration-content">
-
-            <div className="celebration-icon">
-              ✓
-            </div>
-
-            <h2>
-              Amazing!
-            </h2>
-
-            <h3>
-              Correct Answer!
-            </h3>
-
-            <p>
-              Keep going! You're doing
-              great! 🚀
-            </p>
-
-          </div>
-
-        </div>
-
-      )}
-
-    </div>
+          )}
+        </>
   );
+}
 }
 
 export default App;

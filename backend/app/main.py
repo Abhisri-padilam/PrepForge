@@ -1,6 +1,12 @@
+import re
+
 from fastapi.middleware.cors import CORSMiddleware
+
 from fastapi import FastAPI, Depends, HTTPException
+
 from sqlalchemy.orm import Session
+
+from sqlalchemy import func
 
 from app.database import Base, engine, SessionLocal
 from app import models
@@ -491,3 +497,111 @@ def get_quiz_history(
     )
 
     return history
+
+
+# ==================================================
+# JD BASED PRACTICE
+# ==================================================
+
+@app.post("/api/jd-practice")
+def jd_based_practice(
+    data: dict,
+    db: Session = Depends(get_db)
+):
+
+    jd_text = data.get("job_description", "")
+
+    if not jd_text or not jd_text.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Job description is required"
+        )
+
+    jd_text = jd_text.lower()
+
+    skill_keywords = {
+        "Python": [
+            "python"
+        ],
+
+        "Java": [
+            "java"
+        ],
+
+        "JavaScript": [
+            "javascript",
+            "js"
+        ],
+
+        "React": [
+            "react",
+            "react.js",
+            "reactjs"
+        ],
+
+        "HTML": [
+            "html"
+        ],
+
+        "CSS": [
+            "css"
+        ],
+
+        "SQL": [
+            "sql",
+            "mysql",
+            "postgresql",
+            "database"
+        ],
+
+        "DSA": [
+            "dsa",
+            "data structures",
+            "algorithms",
+            "problem solving"
+        ],
+
+        "Aptitude": [
+            "aptitude",
+            "quantitative aptitude",
+            "logical reasoning",
+            "reasoning"
+        ]
+    }
+
+    detected_skills = []
+
+    for skill, keywords in skill_keywords.items():
+
+        for keyword in keywords:
+
+            pattern = r"\b" + re.escape(keyword) + r"\b"
+
+            if re.search(pattern, jd_text):
+                detected_skills.append(skill)
+                break
+
+    detected_skills = list(dict.fromkeys(detected_skills))
+
+    if not detected_skills:
+        return {
+            "message": "No supported skills detected",
+            "skills": [],
+            "questions": []
+        }
+
+    questions = (
+        db.query(models.Question)
+        .filter(
+            models.Question.category.in_(detected_skills)
+        )
+        .order_by(func.random())
+        .limit(10)
+        .all()
+    )
+
+    return {
+        "message": "JD based questions generated successfully",
+        "skills": detected_skills,
+        "questions": questions
+    }
