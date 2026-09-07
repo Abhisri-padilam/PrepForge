@@ -408,3 +408,94 @@
     font-size: 19px;
   }
 }
+/* =========================================
+   RESPONSIVE AUTH FIX
+========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+
+  .auth-page {
+    min-height: 100dvh;
+    padding: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .auth-logo {
+    width: 65px;
+    height: 65px;
+    font-size: 32px;
+    border-radius: 18px;
+  }
+
+  .auth-card h1 {
+    font-size: 30px;
+  }
+
+  .auth-subtitle {
+    font-size: 18px;
+  }
+
+  .auth-description {
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .input-group {
+    margin-bottom: 17px;
+  }
+
+  .input-group input {
+    padding: 13px 14px;
+    font-size: 16px;
+  }
+
+  .auth-button,
+  .secondary-auth-button {
+    min-height: 48px;
+  }
+
+  .circle-one {
+    width: 200px;
+    height: 200px;
+    top: -80px;
+    left: -80px;
+  }
+
+  .circle-two {
+    width: 220px;
+    height: 220px;
+    bottom: -100px;
+    right: -80px;
+  }
+}
+
+@media (max-width: 380px) {
+
+  .auth-page {
+    padding: 10px;
+  }
+
+  .auth-card {
+    padding: 24px 16px;
+  }
+
+  .auth-card h1 {
+    font-size: 27px;
+  }
+
+  .auth-subtitle {
+    font-size: 17px;
+  }
+}

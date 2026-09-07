@@ -2629,3 +2629,358 @@ button {
 
   margin-top: 0;
 }
+/* =====================================================
+   MOBILE RESPONSIVE FIX
+   ===================================================== */
+
+@media (max-width: 750px) {
+
+  /* Main page */
+  .app {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Hide desktop sidebar on mobile */
+  .sidebar {
+    display: none;
+  }
+
+  /* Main content uses full screen */
+  .main-content {
+    width: 100%;
+    margin-left: 0;
+    padding: 20px 14px;
+  }
+
+  /* Header */
+  .quiz-header {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .quiz-header h1 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  .quiz-header p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .category-badge {
+    width: fit-content;
+    padding: 9px 13px;
+    font-size: 13px;
+  }
+
+  /* Quiz layout */
+  .quiz-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* Question card */
+  .question-card {
+    width: 100%;
+    padding: 18px 14px;
+    border-radius: 17px;
+  }
+
+  /* Question top */
+  .question-top {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .question-number,
+  .timer {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+
+  /* Progress */
+  .progress-container {
+    width: 100%;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .progress-container span {
+    font-size: 12px;
+  }
+
+  /* Question text */
+  .question-text {
+    font-size: 19px;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  /* Options */
+  .options {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .option {
+    width: 100%;
+    min-height: 60px;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .option-letter {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .option-text {
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .option-icon {
+    font-size: 17px;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%;
+    min-width: 0;
+    padding: 14px 20px;
+    margin-top: 22px;
+  }
+
+  /* Navigation buttons */
+  .navigation {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    padding: 11px 10px;
+    font-size: 13px;
+  }
+
+  /* Right sidebar cards */
+  .right-sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .progress-card,
+  .quick-stats,
+  .navigator {
+    width: 100%;
+  }
+
+  /* Question navigator */
+  .question-buttons {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+
+  .question-nav-btn {
+    height: 36px;
+    font-size: 12px;
+  }
+
+  /* Features */
+  .features {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  /* Participant name */
+  .participant-name {
+    max-width: 100%;
+    padding: 9px 16px;
+    font-size: 15px;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .participant-name strong {
+    font-size: 17px;
+  }
+
+  /* Result page */
+  .result-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 70px auto 25px;
+    padding: 25px 15px;
+    border-radius: 22px;
+  }
+
+  .trophy {
+    width: 85px;
+    height: 85px;
+    font-size: 42px;
+    margin-top: -70px;
+  }
+
+  .completed-banner {
+    width: 100%;
+    font-size: 18px;
+    padding: 14px 10px;
+  }
+
+  .score {
+    font-size: 65px;
+  }
+
+  .score span {
+    font-size: 34px;
+  }
+
+  .percentage {
+    font-size: 22px;
+    padding: 8px 20px;
+  }
+
+  .result-message {
+    padding: 17px 12px;
+  }
+
+  .result-message h2 {
+    font-size: 21px;
+  }
+
+  .result-message p {
+    font-size: 14px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .restart-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* History */
+  .history-list {
+    width: 100%;
+  }
+
+  .history-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 18px;
+  }
+
+  .history-number {
+    min-width: 0;
+  }
+
+  .history-score {
+    width: 100%;
+  }
+
+  /* Progress page */
+  .progress-dashboard {
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  .dashboard-card {
+    width: 100%;
+    margin: 20px 0;
+    padding: 18px;
+  }
+
+  .dashboard-heading h1 {
+    font-size: 30px;
+  }
+
+  .dashboard-heading p {
+    font-size: 15px;
+  }
+
+  /* Profile modal */
+  .profile-overlay {
+    padding: 12px;
+  }
+
+  .profile-modal {
+    width: 100%;
+    max-width: 450px;
+    padding: 32px 17px 22px;
+    border-radius: 20px;
+  }
+
+  .profile-detail {
+    padding: 13px;
+    gap: 10px;
+  }
+
+  .profile-detail strong {
+    font-size: 14px;
+  }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+   ===================================================== */
+
+@media (max-width: 380px) {
+
+  .main-content {
+    padding: 15px 10px;
+  }
+
+  .quiz-header h1 {
+    font-size: 21px;
+  }
+
+  .question-text {
+    font-size: 17px;
+  }
+
+  .option-text {
+    font-size: 13px;
+  }
+
+  .question-buttons {
+    gap: 4px;
+  }
+
+  .question-nav-btn {
+    height: 33px;
+    font-size: 11px;
+  }
+
+  .nav-btn {
+    font-size: 12px;
+    padding: 10px 7px;
+  }
+
+  .result-card {
+    padding: 22px 12px;
+  }
+
+  .score {
+    font-size: 55px;
+  }
+}
