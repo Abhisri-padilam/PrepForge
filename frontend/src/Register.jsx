@@ -77,7 +77,7 @@ function Register({ onLogin }) {
           🚀
         </div>
 
-        <h1>PrepForge</h1>
+        <h1>PrepNexa</h1>
 
         <p className="auth-subtitle">
           Create Your Account

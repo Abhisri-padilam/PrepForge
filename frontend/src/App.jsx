@@ -1008,7 +1008,7 @@ function App() {
         <div className="loader"></div>
 
         <h2>
-          Loading PrepForge...
+          Loading PrepNexa...
         </h2>
 
         <p>
@@ -1034,7 +1034,7 @@ function App() {
           </div>
 
           <h1>
-            PrepForge
+            PrepNexa
           </h1>
 
           <h2>
@@ -1113,7 +1113,7 @@ function App() {
         🚀
 
         <span>
-          PrepForge
+          PrepNexa
         </span>
       </div>
 
@@ -1529,7 +1529,7 @@ function App() {
                   </strong>
 
                   <p>
-                    PrepForge identifies the
+                    PrepNexa identifies the
                     technical skills mentioned
                     in the JD.
                   </p>
@@ -1600,7 +1600,7 @@ function App() {
               </h1>
 
               <p>
-                Your PrepForge account
+                Your PrepNexa account
                 details
               </p>
 
@@ -1665,7 +1665,7 @@ function App() {
 
 
                 <p className="profile-role">
-                  PrepForge Participant
+                  PrepNexa Participant
                 </p>
 
 

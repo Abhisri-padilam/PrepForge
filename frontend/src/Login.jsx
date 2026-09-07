@@ -70,7 +70,7 @@ function Login({ onLogin, onRegister }) {
           🚀
         </div>
 
-        <h1>PrepForge</h1>
+        <h1>PrepNexa</h1>
 
         <p className="auth-subtitle">
           Welcome Back!

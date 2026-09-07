@@ -41,10 +41,9 @@ function LandingPage({ onStart }) {
 
 
         {/* Website Name */}
-
-        <h1 className="landing-title">
-          Prep<span>Forge</span>
-        </h1>
+<h1 className="landing-title">
+  Prep<span>Nexa</span>
+</h1>
 
 
         {/* Subtitle */}
