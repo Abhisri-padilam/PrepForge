@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./ResumeATS.css";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://prepforge-70ga.onrender.com";
 
 function ResumeATS() {
   const [file, setFile] = useState(null);
