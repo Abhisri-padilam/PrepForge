@@ -3,6 +3,7 @@ import "./App.css";
 import Login from "./Login";
 import Register from "./Register";
 import LandingPage from "./LandingPage";
+import ResumeATS from "./ResumeATS";
 
 const API_URL = "https://prepforge-70ga.onrender.com";
 
@@ -61,6 +62,8 @@ function App() {
 
   const [activeSection, setActiveSection] =
     useState("jdPractice");
+  const [mobileMenuOpen, setMobileMenuOpen] =
+  useState(false);
 
   const [selectedCategory, setSelectedCategory] =
     useState("All");
@@ -616,9 +619,33 @@ function App() {
       return;
     }
 
-    const correct =
-      selectedAnswer ===
-      question.correct_answer;
+
+      console.log("Selected:", JSON.stringify(selectedAnswer));
+console.log(
+  "Correct:",
+  JSON.stringify(question.correct_answer)
+);
+console.log("Selected:", JSON.stringify(selectedAnswer));
+console.log(
+  "Correct:",
+  JSON.stringify(question.correct_answer)
+);
+
+console.log("Selected:", JSON.stringify(selectedAnswer));
+console.log(
+  "Correct:",
+  JSON.stringify(question.correct_answer)
+);
+console.log("Selected:", JSON.stringify(selectedAnswer));
+console.log(
+  "Correct:",
+  JSON.stringify(question.correct_answer)
+);
+
+const correct =
+  selectedAnswer?.trim() ===
+  question.correct_answer?.trim();
+  
 
     setIsCorrect(correct);
     setSubmitted(true);
@@ -950,6 +977,7 @@ function App() {
 
   const navigate = (section) => {
     setActiveSection(section);
+     setMobileMenuOpen(false);
 
     if (section === "profile") {
       fetchProfile();
@@ -1106,7 +1134,108 @@ function App() {
   // SIDEBAR
   // =========================================================
 
-  const Sidebar = () => (
+const Sidebar = () => (
+  <>
+    <div className="mobile-topbar">
+      <div className="mobile-logo">
+        🚀 <span>PrepNexa</span>
+      </div>
+
+      <button
+        className="mobile-menu-btn"
+        onClick={() =>
+          setMobileMenuOpen(!mobileMenuOpen)
+        }
+      >
+        {mobileMenuOpen ? "✕" : "☰"}
+      </button>
+    </div>
+
+    {mobileMenuOpen && (
+      <div
+        className="mobile-overlay"
+        onClick={() => setMobileMenuOpen(false)}
+      />
+    )}
+
+    {mobileMenuOpen && (
+      <div className="mobile-menu">
+
+        <div
+          className={`mobile-menu-item ${
+            activeSection === "jdPractice"
+              ? "active"
+              : ""
+          }`}
+          onClick={() => navigate("jdPractice")}
+        >
+          🎯 <span>JD Practice</span>
+        </div>
+        <div
+  className={`mobile-menu-item ${
+    activeSection === "resumeATS"
+      ? "active"
+      : ""
+  }`}
+  onClick={() => navigate("resumeATS")}
+>
+  📄 <span>Resume ATS</span>
+</div>
+
+        <div
+          className={`mobile-menu-item ${
+            activeSection === "progress"
+              ? "active"
+              : ""
+          }`}
+          onClick={() => navigate("progress")}
+        >
+          📊 <span>My Progress</span>
+        </div>
+
+        <div
+          className={`mobile-menu-item ${
+            activeSection === "leaderboard"
+              ? "active"
+              : ""
+          }`}
+          onClick={() => navigate("leaderboard")}
+        >
+          🏆 <span>Leaderboard</span>
+        </div>
+
+        <div
+          className={`mobile-menu-item ${
+            activeSection === "history"
+              ? "active"
+              : ""
+          }`}
+          onClick={() => navigate("history")}
+        >
+          🕘 <span>History</span>
+        </div>
+
+        <div
+          className={`mobile-menu-item ${
+            activeSection === "profile"
+              ? "active"
+              : ""
+          }`}
+          onClick={() => navigate("profile")}
+        >
+          👤 <span>Profile</span>
+        </div>
+
+        <div
+          className="mobile-menu-item mobile-logout"
+          onClick={handleLogout}
+        >
+          🚪 <span>Logout</span>
+        </div>
+
+      </div>
+    )}
+
     <aside className="sidebar">
 
       <div className="logo">
@@ -1138,7 +1267,24 @@ function App() {
             JD Practice
           </span>
         </div>
+       {/* RESUME ATS */}
 
+<div
+  className={`menu-item ${
+    activeSection === "resumeATS"
+      ? "active"
+      : ""
+  }`}
+  onClick={() =>
+    navigate("resumeATS")
+  }
+>
+  📄
+
+  <span>
+    Resume ATS
+  </span>
+</div>
 
         {/* PROGRESS */}
 
@@ -1270,6 +1416,7 @@ function App() {
       </div>
 
     </aside>
+        </>
   );
 
 
@@ -1574,7 +1721,21 @@ function App() {
     );
   }
 
+// =========================================================
+// RESUME ATS PAGE
+// =========================================================
 
+if (activeSection === "resumeATS") {
+  return (
+    <div className="app">
+      <Sidebar />
+
+      <main className="main-content">
+        <ResumeATS />
+      </main>
+    </div>
+  );
+}
   // =========================================================
   // PROFILE PAGE
   // =========================================================
@@ -2058,6 +2219,7 @@ function App() {
 
     const leaderboard = [
       ...history,
+
     ]
       .sort(
         (a, b) =>
@@ -2224,15 +2386,22 @@ if (activeSection === "jdQuiz") {
               <div className="result-card">
 
                 <div className="result-icon">
-                  🎉
-                </div>
+  🎉
+</div>
 
-                <h1>Practice Completed!</h1>
 
-                <p className="result-message">
-                  Great job! Here is your JD Practice result.
-                </p>
+<h1>Practice Completed!</h1>
 
+<p className="result-user">
+  👋 Well done,{" "}
+  <strong>
+    {localStorage.getItem("user_name") || "User"}
+  </strong>
+</p>
+
+<p className="result-message">
+  Great job! Here is your JD Practice result.
+</p>
                 <div className="score-circle">
                   <span>{score}</span>
                   <small>/ {questions.length}</small>
@@ -2400,23 +2569,20 @@ if (activeSection === "jdQuiz") {
                       ].map((option) => {
 
                         const isSelected =
-                          selectedAnswer === option.key;
+  selectedAnswer === option.text;
 
-                      
+const isCorrect =
+  submitted &&
+  option.text ===
+    questions[currentQuestion]
+      ?.correct_answer;
 
-                        const isCorrect =
-                          submitted &&
-                          option.key ===
-                            questions[currentQuestion]
-                              ?.correct_answer;
-
-                        const isWrong =
-                          submitted &&
-                          isSelected &&
-                          option.key !==
-                            questions[currentQuestion]
-                              ?.correct_answer;
-
+const isWrong =
+  submitted &&
+  isSelected &&
+  option.text !==
+    questions[currentQuestion]
+      ?.correct_answer;
                         return (
                           <button
                             key={option.key}
@@ -2435,7 +2601,7 @@ if (activeSection === "jdQuiz") {
                             }`}
                             onClick={() =>
                               !submitted &&
-                              handleAnswer(option.key)
+                              handleAnswer(option.text)
                             }
                             disabled={submitted}
                           >
