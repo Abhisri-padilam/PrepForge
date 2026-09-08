@@ -32,6 +32,7 @@
   padding: 30px;
 }
 
+
 /* =========================================
    BACKGROUND CIRCLES
 ========================================= */
@@ -58,6 +59,7 @@
   bottom: -150px;
   right: -100px;
 }
+
 
 /* =========================================
    AUTH CARD
@@ -86,6 +88,7 @@
 
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
+
 
 /* =========================================
    LOGO
@@ -116,6 +119,7 @@
   box-shadow:
     0 12px 25px rgba(99, 102, 241, 0.35);
 }
+
 
 /* =========================================
    HEADINGS
@@ -158,6 +162,7 @@
   font-size: 14px;
 }
 
+
 /* =========================================
    INPUTS
 ========================================= */
@@ -197,13 +202,23 @@
 
   background: #f9fafb;
 
+  /* FIX: MAKE ENTERED TEXT VISIBLE */
+  color: #1f2937;
+  -webkit-text-fill-color: #1f2937;
+  caret-color: #1f2937;
+
   transition: all 0.25s ease;
 }
 
 .input-group input:focus {
   border-color: #6366f1;
 
-  background: white;
+  background: #ffffff;
+
+  /* FIX: KEEP TEXT VISIBLE WHEN FOCUSED */
+  color: #1f2937;
+  -webkit-text-fill-color: #1f2937;
+  caret-color: #1f2937;
 
   box-shadow:
     0 0 0 4px rgba(99, 102, 241, 0.12);
@@ -212,6 +227,18 @@
 .input-group input::placeholder {
   color: #9ca3af;
 }
+
+
+/* =========================================
+   AUTOFILL FIX
+========================================= */
+
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #1f2937;
+}
+
 
 /* =========================================
    MAIN BUTTON
@@ -269,6 +296,7 @@
   transform: none;
 }
 
+
 /* =========================================
    DIVIDER
 ========================================= */
@@ -299,6 +327,7 @@
 
   background: #e5e7eb;
 }
+
 
 /* =========================================
    SECONDARY BUTTON
@@ -340,6 +369,7 @@
   font-size: 14px;
 }
 
+
 /* =========================================
    ERROR
 ========================================= */
@@ -362,6 +392,7 @@
   font-weight: 600;
 }
 
+
 /* =========================================
    SUCCESS
 ========================================= */
@@ -383,6 +414,7 @@
 
   font-weight: 600;
 }
+
 
 /* =========================================
    MOBILE
@@ -408,6 +440,8 @@
     font-size: 19px;
   }
 }
+
+
 /* =========================================
    RESPONSIVE AUTH FIX
 ========================================= */
@@ -420,22 +454,29 @@
 
   .auth-page {
     min-height: 100dvh;
+
     padding: 16px;
+
     overflow-y: auto;
     overflow-x: hidden;
   }
 
   .auth-card {
     width: 100%;
+
     max-width: 450px;
+
     padding: 28px 20px;
+
     border-radius: 20px;
   }
 
   .auth-logo {
     width: 65px;
     height: 65px;
+
     font-size: 32px;
+
     border-radius: 18px;
   }
 
@@ -449,6 +490,7 @@
 
   .auth-description {
     font-size: 13px;
+
     margin-bottom: 24px;
   }
 
@@ -458,7 +500,13 @@
 
   .input-group input {
     padding: 13px 14px;
+
     font-size: 16px;
+
+    /* KEEP MOBILE INPUT TEXT VISIBLE */
+    color: #1f2937;
+    -webkit-text-fill-color: #1f2937;
+    caret-color: #1f2937;
   }
 
   .auth-button,
@@ -469,6 +517,7 @@
   .circle-one {
     width: 200px;
     height: 200px;
+
     top: -80px;
     left: -80px;
   }
@@ -476,10 +525,12 @@
   .circle-two {
     width: 220px;
     height: 220px;
+
     bottom: -100px;
     right: -80px;
   }
 }
+
 
 @media (max-width: 380px) {
 
